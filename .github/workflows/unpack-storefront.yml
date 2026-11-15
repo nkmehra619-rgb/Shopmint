@@ -14,12 +14,13 @@ jobs:
         with:
           ref: heymybuddy-storefront
           persist-credentials: true
-      - name: Extract verified storefront archive
+      - name: Extract storefront source archive
         run: |
           python - <<'PY'
           import base64, zipfile, pathlib
           archive = pathlib.Path(".storefront-source.b64")
-          data = base64.b64decode(archive.read_text().strip(), validate=True)
+          encoded = "".join(archive.read_text().split())
+          data = base64.b64decode(encoded, validate=True)
           temp = pathlib.Path("/tmp/heymybuddy-source.zip")
           temp.write_bytes(data)
           with zipfile.ZipFile(temp) as z:
